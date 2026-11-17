@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My local model</title>
+</head>
+<body>
+  <h1>Ask your local model</h1>
+
+  <!-- This is where you type your prompt. -->
+  <label for="prompt">Enter a prompt:</label>
+  <br>
+  <textarea id="prompt" rows="5" cols="50"></textarea>
+  <br>
+
+  <!-- Clicking this button runs the JavaScript function below. -->
+  <button onclick="sendPrompt()">Send prompt</button>
+
+  <h2>Response</h2>
+  <!-- pre-wrap preserves line breaks; textContent displays the answer as text. -->
+  <div id="response" style="white-space: pre-wrap;"></div>
+
+  <script>
+    // async lets us use await while waiting for the backend's answer.
+    async function sendPrompt() {
+      // Find the text box and read the text the user entered.
+      const prompt = document.getElementById('prompt').value;
+
+      // Find the area where we will display the model's answer.
+      const output = document.getElementById('response');
+      output.textContent = 'Thinking…';
+
+      // fetch makes an HTTP request to our FastAPI backend.
+      // This relative URL uses the same server that served this page.
+      const response = await fetch('/api/prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Convert a JavaScript object into JSON text for the request body.
+        body: JSON.stringify({ prompt: prompt })
+      });
+
+      // Convert the backend's JSON into a JavaScript object.
+      const data = await response.json();
+
+      // Our backend returns {"response": "the model's answer"}.
+      output.textContent = data.response;
+    }
+  </script>
+</body>
+</html>
