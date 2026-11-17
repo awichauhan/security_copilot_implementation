@@ -9,7 +9,8 @@ class Settings(BaseSettings):
     model_name: str
     db_url: str  # Reserved for later; we do not connect to a database yet.
 
-    # Find .env beside this file, regardless of the terminal's current folder.
+    # Find .env
+    # beside this file, regardless of the terminal's current folder.
     model_config = SettingsConfigDict(
         env_file=Path(__file__).with_name(".env"),
         env_file_encoding="utf-8",
